@@ -2,7 +2,16 @@ import logger from "../utils/logger.utils.js";
 import { parse } from 'stack-trace';
 import path from "path";
 
-const errorHandler = (err, req, res) => {
+export const notFoundRoute = (req,res) => {
+    logger.info(`route not found`);
+
+    return res.status(404).json({
+        status: "failed",
+        message: "route not found"
+    })
+}
+
+export const errorHandler = (err, req, res) => {
     let errorMessage = err.message;
     const stackFrames = parse(err);
 
@@ -25,5 +34,3 @@ const errorHandler = (err, req, res) => {
         error: errorMessage
     });
 }
-
-export default errorHandler;

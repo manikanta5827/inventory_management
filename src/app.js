@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import { logMiddleware } from './utils/logger.utils.js';
 import appRoutes from './routes/index.js';
-import errorHandler from './middlewares/error.middleware.js';
+import { errorHandler, notFoundRoute } from './middlewares/error.middleware.js';
 
 const app = express();
 
@@ -14,6 +14,7 @@ app.use(logMiddleware);
 // routes
 app.use('/api/v1', appRoutes);
 
+app.use(notFoundRoute);
 // error handler
 app.use(errorHandler);
 
