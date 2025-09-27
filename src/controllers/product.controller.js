@@ -105,7 +105,6 @@ export const getAllProducts = async (req, res) => {
 export const getProduct = async (req, res) => {
     let productId = req.params.id;
     productId = Number(productId);
-    console.log(typeof productId);
 
     if (isNaN(productId)) {
         return res.status(400).json({
@@ -142,8 +141,37 @@ export const updateProduct = async (req, res) => {
 }
 
 export const deleteProduct = async (req, res) => {
+    let productId = req.params.id;
+    productId = Number(productId);
+
+    if (isNaN(productId)) {
+        return res.status(400).json({
+            status: "error",
+            message: "id should be a integer"
+        })
+    }
+
+    const product = await prisma.product.findFirst({
+        where: {
+            id: productId
+        }
+    })
+
+    if (!product) {
+        return res.status(404).json({
+            status: "failed",
+            message: "product not found"
+        })
+    }
+
+    await prisma.product.delete({
+        where: {
+            id: productId
+        }
+    })
+
     return res.status(200).json({
         status: "success",
-        message: "products deleted successfully"
+        message: "product deleted successfully"
     })
 }
