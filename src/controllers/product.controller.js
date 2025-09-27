@@ -55,7 +55,7 @@ export const createProduct = async (req, res) => {
         }
     })
 
-    if(productExist) {
+    if (productExist) {
         return res.status(409).json({
             status: "error",
             message: "product already exists with same name and description"
@@ -71,7 +71,7 @@ export const createProduct = async (req, res) => {
         }
     })
 
-    if(!product) {
+    if (!product) {
         return res.status(500).json({
             status: "failed",
             message: "product creation failed"
@@ -86,16 +86,51 @@ export const createProduct = async (req, res) => {
 }
 
 export const getAllProducts = async (req, res) => {
+    const products = await prisma.product.findMany();
+
+    if (products.length == 0) {
+        return res.status(200).json({
+            status: "success",
+            message: "no products found"
+        })
+    }
+
     return res.status(200).json({
         status: "success",
-        message: "products fetched successfully"
+        message: "products fetched successfully",
+        products: products
     })
 }
 
 export const getProduct = async (req, res) => {
+    let productId = req.params.id;
+    productId = Number(productId);
+    console.log(typeof productId);
+
+    if (isNaN(productId)) {
+        return res.status(400).json({
+            status: "error",
+            message: "id should be a integer"
+        })
+    }
+
+    const product = await prisma.product.findFirst({
+        where: {
+            id: productId
+        }
+    })
+
+    if (!product) {
+        return res.status(404).json({
+            status: "success",
+            message: "product not found"
+        })
+    }
+
     return res.status(200).json({
         status: "success",
-        message: "product fetched successfully"
+        message: "product fetched successfully",
+        product: product
     })
 }
 
