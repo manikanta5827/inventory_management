@@ -33,6 +33,13 @@ export const createProduct = async (req, res) => {
         })
     }
 
+    if (stock_quantity < 0) {
+        return res.status(400).json({
+            status: 'error',
+            message: "stock_quantity must be greater than 0"
+        })
+    }
+
     if (!low_stock_threshold) {
         return res.status(400).json({
             status: "error",
@@ -44,6 +51,13 @@ export const createProduct = async (req, res) => {
         return res.status(400).json({
             status: "error",
             message: "low_stock_threshold should be a integer"
+        })
+    }
+
+    if (low_stock_threshold < 0) {
+        return res.status(400).json({
+            status: 'error',
+            message: "low_stock_threshold must be greater than 0"
         })
     }
 
@@ -134,6 +148,86 @@ export const getProduct = async (req, res) => {
 }
 
 export const updateProduct = async (req, res) => {
+    let productId = req.params.id;
+    productId = Number(productId);
+
+    let { name, description, stock_quantity, low_stock_threshold } = req.body;
+
+    let reqBody = {};
+
+    // validating name
+    if (name != undefined) {
+        if (name === "") {
+            return res.status(400).json({
+                status: "error",
+                message: "name shoudn't be empty"
+            })
+        }
+        else {
+            reqBody.name = name;
+        }
+    }
+
+    // validating description
+    if (description != undefined) {
+        if (description === "") {
+            return res.status(400).json({
+                status: "error",
+                message: "description shoudn't be empty"
+            })
+        }
+        else {
+            reqBody.description = description;
+        }
+    }
+
+    // validating stock_quantity
+    if (stock_quantity != undefined) {
+        stock_quantity = Number(stock_quantity);
+        if (isNaN(stock_quantity)) {
+            return res.status(400).json({
+                status: "error",
+                message: "stock_quantity shoud be a integer"
+            })
+        }
+        else {
+            if (stock_quantity < 0) {
+                return res.status(400).json({
+                    status: 'error',
+                    message: "stock_quantity must be greater than 0"
+                })
+            }
+            reqBody.stock_quantity = stock_quantity;
+        }
+    }
+
+    // validating low_stock_threshold
+    if (low_stock_threshold != undefined) {
+        low_stock_threshold = Number(low_stock_threshold);
+        if (isNaN(low_stock_threshold)) {
+            return res.status(400).json({
+                status: "error",
+                message: "low_stock_threshold shoud be a integer"
+            })
+        }
+        else {
+            if (low_stock_threshold < 0) {
+                return res.status(400).json({
+                    status: 'error',
+                    message: "low_stock_threshold must be greater than 0"
+                })
+            }
+            reqBody.low_stock_threshold = low_stock_threshold;
+        }
+    }
+
+    await prisma.product.update({
+        where: {
+            id: productId
+        },
+        data: reqBody
+    })
+
     return res.status(200).json({
         status: "success",
         message: "product updated successfully"
