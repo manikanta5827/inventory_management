@@ -3,6 +3,8 @@ import { Request, Response } from 'express';
 import { productIdSchema } from '../schemas/product.schema';
 import { inventorySchema } from '../schemas/inventory.schema';
 const prisma = new PrismaClient();
+const PRODUCT_NOT_FOUND = "product not found";
+const INSUFFICIENT_STOCK_QUANTITY = "insufficient stock quantity";
 
 export const increaseStock = async (req: Request, res: Response) => {
     
@@ -38,7 +40,7 @@ export const increaseStock = async (req: Request, res: Response) => {
                 productId
               );
     
-            if(!product) throw new Error("product not found");
+            if(!product) throw new Error(PRODUCT_NOT_FOUND);
     
             await tx.product.update({
                 where: {
@@ -50,9 +52,14 @@ export const increaseStock = async (req: Request, res: Response) => {
             })
         })
     } catch (error: any) {
-        console.log(error.message);
-        return res.status(404).json({
-            status: "error",
+        if(error.message === PRODUCT_NOT_FOUND) {
+            return res.status(404).json({
+                status: "error",
+                message: error.message
+            });
+        }
+        return res.status(500).json({
+            status: "failed",
             message: error.message
         });
     }
@@ -97,9 +104,9 @@ export const decreaseStock = async (req: Request, res: Response) => {
                 productId
               );
     
-            if(!product) throw new Error("product not found");
+            if(!product) throw new Error(PRODUCT_NOT_FOUND);
     
-            if(product.stock_quantity < amount) throw new Error("insufficient stock quantity")
+            if(product.stock_quantity < amount) throw new Error(INSUFFICIENT_STOCK_QUANTITY);
     
             await tx.product.update({
                 where: {
@@ -112,13 +119,13 @@ export const decreaseStock = async (req: Request, res: Response) => {
         })
     } catch (error: any) {
         console.log(error.message);
-        if(error.message === "product not found") {
+        if(error.message === PRODUCT_NOT_FOUND) {
             return res.status(404).json({
                 status: "error",
                 message: error.message
             });
         }
-        else if(error.message === "insufficient stock quantity") {
+        else if(error.message === INSUFFICIENT_STOCK_QUANTITY) {
             return res.status(400).json({
                 status: "error",
                 message: error.message
