@@ -4,9 +4,9 @@ import { decreaseStock, increaseStock } from "../controllers/inventory.controlle
 const router = Router();
 
 // increase stock
-router.post('/:id/stock/increase', increaseStock);
+router.put('/:id/stock/increase', increaseStock);
 
 // decrease stock
-router.post('/:id/stock/decrease', decreaseStock);
+router.put('/:id/stock/decrease', decreaseStock);
 
 export default router;
