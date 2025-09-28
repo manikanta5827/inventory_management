@@ -28,7 +28,7 @@ export const errorHandler = (err: Error, req: Request, res: Response) => {
         errorMessage = "Database connection failed. Please verify that your database server is running and accessible."
     }
     res.status(500).send({
-        status: "error",
+        status: "failed",
         message: 'Something went wrong!',
         error: errorMessage
     });
