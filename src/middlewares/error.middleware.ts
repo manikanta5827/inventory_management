@@ -5,7 +5,7 @@ import path from "path";
 
 export const notFoundRoute = (req: Request, res: Response) => {
     return res.status(404).json({
-        status: "failed",
+        status: "error",
         message: "route not found"
     })
 }

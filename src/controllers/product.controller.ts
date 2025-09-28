@@ -89,7 +89,7 @@ export const getProduct = async (req: Request, res: Response) => {
 
     if (!product) {
         return res.status(404).json({
-            status: "success",
+            status: "error",
             message: "product not found"
         })
     }
@@ -180,7 +180,7 @@ export const deleteProduct = async (req: Request, res: Response) => {
 
     if (!product) {
         return res.status(404).json({
-            status: "failed",
+            status: "error",
             message: "product not found"
         })
     }
