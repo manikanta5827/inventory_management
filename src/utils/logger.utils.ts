@@ -1,6 +1,7 @@
 import { createLogger, transports, format } from 'winston';
 import path from 'path';
 import fs from 'fs';
+import { Request, Response, NextFunction } from 'express';
 
 let logDir = path.join(process.cwd(), "logs");
 
@@ -34,7 +35,7 @@ const logger = createLogger({
 
 console.log(`Winston logger initialized. Log directory: ${logDir}`);
 
-export const logMiddleware = (req, res, next) => {
+export const logMiddleware = (req: Request, res: Response, next: NextFunction) => {
   const startHrTime = process.hrtime();
 
   res.on('finish', () => {

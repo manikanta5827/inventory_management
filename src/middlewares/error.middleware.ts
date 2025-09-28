@@ -1,8 +1,9 @@
-import logger from "../utils/logger.utils.js";
+import logger from "../utils/logger.utils";
 import { parse } from 'stack-trace';
+import { Request, Response } from "express";
 import path from "path";
 
-export const notFoundRoute = (req,res) => {
+export const notFoundRoute = (req: Request, res: Response) => {
     logger.info(`route not found`);
 
     return res.status(404).json({
@@ -11,7 +12,7 @@ export const notFoundRoute = (req,res) => {
     })
 }
 
-export const errorHandler = (err, req, res) => {
+export const errorHandler = (err: Error, req: Request, res: Response) => {
     let errorMessage = err.message;
     const stackFrames = parse(err);
 

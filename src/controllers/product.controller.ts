@@ -1,7 +1,8 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Prisma } from "@prisma/client";
+import { Request, Response } from 'express';
 const prisma = new PrismaClient();
 
-export const createProduct = async (req, res) => {
+export const createProduct = async (req: Request, res: Response) => {
     const { name, description, stock_quantity, low_stock_threshold } = req.body;
 
     // validating fields
@@ -99,7 +100,7 @@ export const createProduct = async (req, res) => {
     })
 }
 
-export const getAllProducts = async (req, res) => {
+export const getAllProducts = async (req: Request, res: Response) => {
     const products = await prisma.product.findMany();
 
     if (products.length == 0) {
@@ -116,9 +117,8 @@ export const getAllProducts = async (req, res) => {
     })
 }
 
-export const getProduct = async (req, res) => {
-    let productId = req.params.id;
-    productId = Number(productId);
+export const getProduct = async (req: Request, res: Response) => {
+    let productId = Number(req.params.id);
 
     if (isNaN(productId)) {
         return res.status(400).json({
@@ -147,13 +147,12 @@ export const getProduct = async (req, res) => {
     })
 }
 
-export const updateProduct = async (req, res) => {
-    let productId = req.params.id;
-    productId = Number(productId);
+export const updateProduct = async (req: Request, res: Response) => {
+    let productId = Number(req.params.id);
 
     let { name, description, stock_quantity, low_stock_threshold } = req.body;
 
-    let reqBody = {};
+    let reqBody: Prisma.ProductUpdateInput = {};
 
     // validating name
     if (name != undefined) {
@@ -234,9 +233,8 @@ export const updateProduct = async (req, res) => {
     })
 }
 
-export const deleteProduct = async (req, res) => {
-    let productId = req.params.id;
-    productId = Number(productId);
+export const deleteProduct = async (req: Request, res: Response) => {
+    let productId = Number(req.params.id);
 
     if (isNaN(productId)) {
         return res.status(400).json({
