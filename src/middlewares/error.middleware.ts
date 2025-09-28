@@ -4,8 +4,6 @@ import { Request, Response } from "express";
 import path from "path";
 
 export const notFoundRoute = (req: Request, res: Response) => {
-    logger.info(`route not found`);
-
     return res.status(404).json({
         status: "failed",
         message: "route not found"
