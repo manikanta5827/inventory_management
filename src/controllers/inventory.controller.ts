@@ -144,3 +144,15 @@ export const decreaseStock = async (req: Request, res: Response) => {
         message: "stock decremented successfully"
     })
 }
+
+export const lowStockThresholdProducts = async (req: Request, res: Response) => {
+    const products = await prisma.$queryRaw`
+        SELECT * FROM "Product"
+        WHERE stock_quantity < low_stock_threshold`;
+
+    return res.status(200).json({
+        status: "success",
+        message: "low stock products fetched successfully",
+        products: products
+    })
+}
