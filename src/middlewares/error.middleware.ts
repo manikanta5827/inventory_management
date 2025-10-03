@@ -1,5 +1,4 @@
 import logger from "../utils/logger.utils";
-import { parse } from 'stack-trace';
 import { Request, Response } from "express";
 import path from "path";
 
@@ -10,24 +9,39 @@ export const notFoundRoute = (req: Request, res: Response) => {
     })
 }
 
-export const errorHandler = (err: Error, req: Request, res: Response) => {
+
+export const errorHandler = (err: Error, req: Request, res: Response ) => {
     let errorMessage = err.message;
-    const stackFrames = parse(err);
 
-    if (stackFrames[0]) {
-        let fileName = path.basename(stackFrames[0].getFileName() ?? 'fileNotfound');
-        let lineNumber = stackFrames[0].getLineNumber();
-        let functionName = stackFrames[0].getFunctionName();
+    const stack = err.stack;
+    if (stack) {
+        const stackLines = stack.split('\n');
+        if (stackLines.length > 1) {
+            const firstFrame = stackLines[1].trim();
+            const match = firstFrame.match(/at\s+(.+?)\s+\((.+?):(\d+):(\d+)\)/) ||
+                firstFrame.match(/at\s+(.+?):(\d+):(\d+)/);
 
-        let logMessage = `[CRITICAL]: Error happened in file::${fileName} Line::${lineNumber} FunctionName::${functionName} Message::${errorMessage}`;
+            if (match) {
+                const functionName = match[1] || 'anonymous';
+                const fileName = path.basename(match[2] || 'unknown');
+                const lineNumber = match[3] || 'unknown';
 
-        logger.warn(logMessage);
+                const logMessage = `[CRITICAL]: Error happened in file::${fileName} Line::${lineNumber} FunctionName::${functionName} Message::${errorMessage}`;
+                logger.warn(logMessage);
+            } else {
+                logger.warn(`[CRITICAL]: Error occurred - ${errorMessage}`);
+            }
+        } else {
+            logger.warn(`[CRITICAL]: Error occurred - ${errorMessage}`);
+        }
+    } else {
+        logger.warn(`[CRITICAL]: Error occurred - ${errorMessage}`);
     }
 
     if (errorMessage.includes("Can't reach database server")) {
         errorMessage = "Database connection failed. Please verify that your database server is running and accessible."
     }
-    res.status(500).send({
+    return res.status(500).send({
         status: "failed",
         message: 'Something went wrong!',
         error: errorMessage
