@@ -26,6 +26,8 @@ This inventory management system provides:
 | **Jest** | ^29.7.0 | Testing framework |
 | **Supertest** | ^7.1.4 | HTTP assertion testing |
 | **CORS** | ^2.8.5 | Cross-origin resource sharing |
+| **Swagger JSDoc** | ^6.2.8 | API documentation generation |
+| **Swagger UI Express** | ^5.0.1 | Interactive API documentation |
 
 ## Prerequisites
 
@@ -85,6 +87,25 @@ model Product {
    npm run build
    npm start
    ```
+
+6. **Access Swagger Documentation**
+   Once the server is running, visit: `http://localhost:8080/api-docs`
+
+## API Documentation
+
+The project includes comprehensive Swagger/OpenAPI documentation:
+
+- **Swagger UI**: Visit `http://localhost:8080/api-docs` when the server is running
+- **Interactive Testing**: Test all endpoints directly from the Swagger UI
+- **Schema Validation**: Complete request/response schemas with validation rules
+- **Error Codes**: Detailed error response documentation
+
+### Features:
+- Complete API endpoint documentation
+- Request/response examples
+- Schema definitions with validation rules
+- Interactive API testing interface
+- Organized by tags (Products, Inventory)
 
 ## Running Tests
 
