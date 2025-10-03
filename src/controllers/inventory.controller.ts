@@ -126,7 +126,7 @@ export const decreaseStock = async (req: Request, res: Response) => {
             });
         }
         else if(error.message === INSUFFICIENT_STOCK_QUANTITY) {
-            return res.status(400).json({
+            return res.status(409).json({
                 status: "error",
                 message: error.message
             });
