@@ -53,7 +53,7 @@ model Product {
 
 1. **Clone the repository**
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/manikanta5827/inventory_management.git
    cd inventory_management
    ```
 
