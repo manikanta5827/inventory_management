@@ -17,6 +17,7 @@ app.get('/',(req: Request, res: Response)=>{
     res.json({
         status: "success",
         message: "server running",
+        docs: "docs available on /api-docs",
         time: new Date()
     })
 })
